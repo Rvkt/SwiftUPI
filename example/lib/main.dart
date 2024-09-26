@@ -44,7 +44,8 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion = await _swiftUpiPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      platformVersion = await _swiftUpiPlugin.getPlatformVersion() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -88,7 +89,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   // New method to start a transaction
-  void _startTransaction({required String recUpiId, required String recName, required String txnRefId, required String txnNote, required String amt, required String app}) async {
+  void _startTransaction(
+      {required String recUpiId,
+      required String recName,
+      required String txnRefId,
+      required String txnNote,
+      required String amt,
+      required String app}) async {
     Map<String, String> resultMap = {};
 
     try {
@@ -172,7 +179,13 @@ class _MyAppState extends State<MyApp> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  _startTransaction(recUpiId: recUpiId, recName: 'RAVI KANT', txnRefId: '123', txnNote: 'Check', amt: '1.00', app: upiApps[index]['packageName']);
+                                  _startTransaction(
+                                      recUpiId: recUpiId,
+                                      recName: 'RAVI KANT',
+                                      txnRefId: '123',
+                                      txnNote: 'Check',
+                                      amt: '1.00',
+                                      app: upiApps[index]['packageName']);
                                 },
                                 child: _buildAppIcon(upiApps[index]['icon']),
                               ),
@@ -207,7 +220,10 @@ class _MyAppState extends State<MyApp> {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          const Text('Transaction ID', style: TextStyle(fontWeight: FontWeight.bold),),
+                          const Text(
+                            'Transaction ID',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 8),
                           Text(txnId),
                           const SizedBox(height: 8),
@@ -215,12 +231,14 @@ class _MyAppState extends State<MyApp> {
                         ],
                       ),
                     ),
-
                     Container(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          const Text('Response Code', style: TextStyle(fontWeight: FontWeight.bold),),
+                          const Text(
+                            'Response Code',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 8),
                           Text(responseCode),
                           const SizedBox(height: 8),
@@ -228,12 +246,14 @@ class _MyAppState extends State<MyApp> {
                         ],
                       ),
                     ),
-
                     Container(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          const Text('Transaction Reference', style: TextStyle(fontWeight: FontWeight.bold),),
+                          const Text(
+                            'Transaction Reference',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 8),
                           Text(txnRef),
                           const SizedBox(height: 8),
@@ -241,12 +261,14 @@ class _MyAppState extends State<MyApp> {
                         ],
                       ),
                     ),
-
                     Container(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          const Text('Status', style: TextStyle(fontWeight: FontWeight.bold),),
+                          const Text(
+                            'Status',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 8),
                           Text(status),
                           const SizedBox(height: 8),

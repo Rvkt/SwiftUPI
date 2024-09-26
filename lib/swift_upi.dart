@@ -1,8 +1,6 @@
-
 import 'swift_upi_platform_interface.dart';
 
 class SwiftUpi {
-
   Future<String?> getPlatformVersion() {
     return SwiftUpiPlatform.instance.getPlatformVersion();
   }
@@ -40,5 +38,4 @@ class SwiftUpi {
       'app': app,
     });
   }
-
 }
