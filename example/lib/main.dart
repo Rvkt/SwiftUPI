@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   String responseCode = 'N/A';
   String txnRef = 'N/A';
   String status = 'N/A';
-  String recUpiId = '9988776655@upi';
+  String recUpiId = '7282808488@ybl';
 
   @override
   void initState() {
@@ -100,6 +100,11 @@ class _MyAppState extends State<MyApp> {
 
     try {
       final result = await _swiftUpiPlugin.startTransaction(
+        merchantId : '123',
+        currency : 'INR',
+        url : 'https://domain.in',
+
+
         receiverUpiId: recUpiId,
         // Replace with actual receiver UPI ID
         receiverName: recName,
@@ -111,6 +116,7 @@ class _MyAppState extends State<MyApp> {
         amount: amt,
         // Amount in INR (required)
         app: app, // Currency (default INR, optional)
+        
       );
 
       if (result != null) {
@@ -181,10 +187,10 @@ class _MyAppState extends State<MyApp> {
                                 onTap: () {
                                   _startTransaction(
                                       recUpiId: recUpiId,
-                                      recName: 'RAVI KANT',
-                                      txnRefId: '123',
+                                      recName: 'Sakshi',
+                                      txnRefId: 'TXN123QWER',
                                       txnNote: 'Check',
-                                      amt: '1.00',
+                                      amt: '1.0',
                                       app: upiApps[index]['packageName']);
                                 },
                                 child: _buildAppIcon(upiApps[index]['icon']),
