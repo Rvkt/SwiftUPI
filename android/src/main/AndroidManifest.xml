@@ -46,6 +46,7 @@
         <package android:name="com.myairtelapp" />
         <package android:name="com.fss.indus" />
         <package android:name="org.altruist.BajajExperia" />
+
     </queries>
 
 </manifest>
