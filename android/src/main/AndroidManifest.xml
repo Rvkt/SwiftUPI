@@ -8,21 +8,16 @@
         </intent>
     </queries>
     <queries>
-        <package android:name="com.lcode.allahabadupi" />
         <package android:name="in.amazon.mShop.android.shopping" />
         <package android:name="com.upi.axispay" />
         <package android:name="com.bankofbaroda.upi" />
         <package android:name="in.org.npci.upiapp" />
-        <package android:name="com.infra.boiupi" />
         <package android:name="com.infrasofttech.centralbankupi" />
-        <package android:name="in.cointab.app" />
-        <package android:name="com.lcode.corpupi" />
+        <package android:name="com.boi.ua.android" />
         <package android:name="com.lcode.csbupi" />
         <package android:name="com.cub.wallet.gui" />
         <package android:name="com.dbs.in.digitalbank" />
-        <package android:name="com.olive.dcb.upi" />
         <package android:name="com.equitasbank.upi" />
-        <package android:name="com.finopaytech.bpayfino" />
         <package android:name="com.freecharge.android" />
         <package android:name="com.google.android.apps.nbu.paisa.user" />
         <package android:name="com.mgs.hsbcupi" />
@@ -31,24 +26,26 @@
         <package android:name="com.lcode.smartz" />
         <package android:name="com.khaalijeb.inkdrops" />
         <package android:name="com.msf.kbank.mobile" />
-        <package android:name="com.infrasofttech.mahaupi" />
-        <package android:name="com.mipay.in.wallet" />
-        <package android:name="com.mipay.wallet.in" />
         <package android:name="com.mobikwik_new" />
-        <package android:name="com.mgs.obcbank" />
         <package android:name="net.one97.paytm" />
-        <package android:name="com.idbibank.paywiz" />
-        <package android:name="com.enstage.wibmo.hdfc" />
         <package android:name="com.phonepe.app" />
-        <package android:name="com.fss.pnbpsp" />
-        <package android:name="com.mobileware.upipsb" />
-        <package android:name="com.rblbank.upi" />
-        <package android:name="com.realmepay.payments" />
         <package android:name="com.sbi.upi" />
-        <package android:name="com.truecaller" />
-        <package android:name="com.fss.unbipsp" />
-        <package android:name="com.fss.vijayapsp" />
         <package android:name="com.YesBank" />
+        <package android:name="com.yesbank.yespaynext" />
+        <package android:name="com.naviapp" />
+        <package android:name="com.dreamplug.androidapp" />
+        <package android:name="com.phonepe.app.business" />
+        <package android:name="money.super.payments" />
+        <package android:name="com.sbi.lotusintouch" />
+        <package android:name="com.snapwork.hdfc" />
+        <package android:name="com.hdfcbank.payzapp" />
+        <package android:name="com.idfcfirstbank.optimus" />
+        <package android:name="com.bankofbaroda.mconnect" />
+        <package android:name="com.axis.mobile" />
+        <package android:name="com.nextbillion.groww" />
+        <package android:name="com.myairtelapp" />
+        <package android:name="com.fss.indus" />
+        <package android:name="org.altruist.BajajExperia" />
     </queries>
 
 </manifest>
