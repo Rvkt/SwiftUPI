@@ -1,5 +1,5 @@
 name: swift_upi
-description: "A new Flutter plugin project."
+description: "A flutter plugin to do UPI transaction through different apps in Android."
 version: 0.0.3
 homepage: https://github.com/Rvkt/SwiftUPI.git
 
