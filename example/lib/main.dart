@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   String responseCode = 'N/A';
   String txnRef = 'N/A';
   String status = 'N/A';
-  String recUpiId = '7282808488@ybl';
+  String recUpiId = '9988776655@ybl';
 
   @override
   void initState() {

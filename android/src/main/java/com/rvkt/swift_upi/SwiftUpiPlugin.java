@@ -27,6 +27,12 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
+import android.Manifest;
+import android.widget.Toast;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+
 /** SwiftUpiPlugin */
 public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
   private MethodChannel channel;
@@ -36,6 +42,10 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
   static final String TAG = "UPI INDIA";
   static final int uniqueRequestCode = 512078;
   private boolean resultReturned;
+
+  private static final int PERMISSION_REQUEST_CODE = 100;
+
+
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -62,12 +72,27 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
   // Method to get all apps on the device that can handle UPI Intent.
   private void getAllUpiApps() {
+
+    // Check for permissions
+    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.QUERY_ALL_PACKAGES)
+            != PackageManager.PERMISSION_GRANTED) {
+      // Request the permission
+      ActivityCompat.requestPermissions(activity,
+              new String[]{Manifest.permission.QUERY_ALL_PACKAGES},
+              PERMISSION_REQUEST_CODE);
+      // Don't continue if permission is not granted
+      return;
+    }
+
     List<Map<String, Object>> packages = new ArrayList<>();
 
     Intent intent = new Intent(Intent.ACTION_VIEW);
     String uriString = "upi://pay?pa=test@upi&pn=Test&tn=GetAllApps&am=10.00&cu=INR&mode=04";
+//    String uriString = "upi://pay";
     Uri uri = Uri.parse(uriString);
     intent.setData(uri);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
 
     if (activity == null) {
       finalResult.error("activity_missing", "No attached activity found!", null);
@@ -76,6 +101,12 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
     PackageManager pm = activity.getPackageManager();
     List<ResolveInfo> resolveInfoList = pm.queryIntentActivities(intent, 0);
+
+    if (resolveInfoList.isEmpty()) {
+      Log.d(TAG, "No apps found for UPI intent.");
+    } else {
+      Log.d(TAG, "UPI apps found: " + resolveInfoList.size());
+    }
 
     for (ResolveInfo resolveInfo : resolveInfoList) {
       try {
@@ -86,6 +117,9 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bIcon.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] icon = stream.toByteArray();
+
+        Log.d(TAG, "UPI App Found: " + name + " (" + packageName + ")");
+        Log.d(TAG, "Activity Info: " + resolveInfo.activityInfo.toString());
 
         Map<String, Object> m = new HashMap<>();
         m.put("packageName", packageName);
@@ -156,7 +190,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       else uriString += "&cu=" + Uri.encode(currency);
       if (url != null) uriString += "&url=" + Uri.encode(url);
       if (merchantId != null) uriString += "&mc=" + Uri.encode(merchantId);
-      uriString += "&mode=02"; // Optional mode
+      uriString += "&mode=04"; // Optional mode
 
 
 
@@ -197,6 +231,9 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
   public void onAttachedToActivity(ActivityPluginBinding binding) {
     this.activity = binding.getActivity();
+
+
+
     binding.addActivityResultListener((requestCode, resultCode, data) -> {
       if (requestCode == uniqueRequestCode) {
         if (resultCode == Activity.RESULT_OK) {
@@ -214,6 +251,35 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       }
       return false; // Pass through for other request codes
     });
+
+
+    binding.addRequestPermissionsResultListener((requestCode, permissions, grantResults) -> {
+      if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          // Permission granted, call getAllUpiApps
+          getAllUpiApps();
+        } else {
+          // Permission denied, handle accordingly
+          finalResult.error("permission_denied", "Permission denied to query installed apps", null);
+        }
+        return true; // Handle this permission result
+      }
+      return false; // Pass through for other request codes
+    });
+
+
+
+
+
+
+    // Check for permissions here
+    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.QUERY_ALL_PACKAGES)
+            != PackageManager.PERMISSION_GRANTED) {
+      // Request the permission
+      ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.QUERY_ALL_PACKAGES},
+              PERMISSION_REQUEST_CODE);
+    }
+
   }
 
 
@@ -236,22 +302,17 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
   }
-
-
-
-//  @Override
-//  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//    super.onActivityResult(requestCode, resultCode, data);
-//    if (requestCode == uniqueRequestCode) {
-//      if (data != null) {
-//        String response = data.getStringExtra("response");
-//        // Process the response here (you may want to parse it)
-//        // Send this response back to Flutter if necessary
-//        // You might call a method here to send the result back to Flutter
-//      } else {
-//        // Handle cases where no response was received
-//        finalResult.error("no_response", "No response from UPI app", null);
-//      }
-//    }
-//  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

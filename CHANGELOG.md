@@ -6,3 +6,12 @@
 
 ## 0.0.3
 * update package in AndroidManifest
+
+## 0.0.4
+* update package in AndroidManifest
+
+## 0.0.5
+* update package get upi apps function
+
+## 0.0.6
+* Change uri
