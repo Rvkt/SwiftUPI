@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -73,15 +74,21 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
   // Method to get all apps on the device that can handle UPI Intent.
   private void getAllUpiApps() {
 
-    // Check for permissions
+    if (activity == null) {
+      if (finalResult != null) {
+        finalResult.error("activity_missing", "No attached activity found!", null);
+      }
+      return;
+    }
+
+// Check for permissions
     if (ContextCompat.checkSelfPermission(activity, Manifest.permission.QUERY_ALL_PACKAGES)
             != PackageManager.PERMISSION_GRANTED) {
       // Request the permission
       ActivityCompat.requestPermissions(activity,
               new String[]{Manifest.permission.QUERY_ALL_PACKAGES},
               PERMISSION_REQUEST_CODE);
-      // Don't continue if permission is not granted
-      return;
+      return; // Don't continue if permission is not granted
     }
 
     List<Map<String, Object>> packages = new ArrayList<>();
@@ -139,10 +146,15 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
   // Helper method to convert Drawable to Bitmap
   private Bitmap getBitmapFromDrawable(Drawable drawable) {
+    if (drawable instanceof BitmapDrawable) {
+      return ((BitmapDrawable) drawable).getBitmap();
+    }
+
     Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
     drawable.draw(canvas);
+
     return bitmap;
   }
 
@@ -254,23 +266,20 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
 
     binding.addRequestPermissionsResultListener((requestCode, permissions, grantResults) -> {
-      if (requestCode == PERMISSION_REQUEST_CODE) {
+      if (requestCode == PERMISSION_REQUEST_CODE) { // Directly compare with the int constant
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // Permission granted, call getAllUpiApps
-          getAllUpiApps();
+          if (finalResult != null) {
+            getAllUpiApps(); // Call this if permission granted
+          }
         } else {
-          // Permission denied, handle accordingly
-          finalResult.error("permission_denied", "Permission denied to query installed apps", null);
+          if (finalResult != null) {
+            finalResult.error("permission_denied", "Permission denied to query installed apps", null);
+          }
         }
         return true; // Handle this permission result
       }
       return false; // Pass through for other request codes
     });
-
-
-
-
-
 
     // Check for permissions here
     if (ContextCompat.checkSelfPermission(activity, Manifest.permission.QUERY_ALL_PACKAGES)

@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
     <application
         android:label="swift_upi_example"
         android:name="${applicationName}"
@@ -24,6 +28,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
@@ -38,8 +43,59 @@
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
         <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="upi" />
+        </intent>
+
+        <!-- Add all package names of UPI apps you want to query -->
+        <package android:name="in.amazon.mShop.android.shopping" />
+        <package android:name="com.upi.axispay" />
+        <package android:name="com.bankofbaroda.upi" />
+        <package android:name="in.org.npci.upiapp" />
+        <package android:name="com.infrasofttech.centralbankupi" />
+        <package android:name="com.boi.ua.android" />
+        <package android:name="com.lcode.csbupi" />
+        <package android:name="com.cub.wallet.gui" />
+        <package android:name="com.dbs.in.digitalbank" />
+        <package android:name="com.equitasbank.upi" />
+        <package android:name="com.freecharge.android" />
+        <package android:name="com.google.android.apps.nbu.paisa.user" />
+        <package android:name="com.mgs.hsbcupi" />
+        <package android:name="com.csam.icici.bank.imobile" />
+        <package android:name="com.mgs.induspsp" />
+        <package android:name="com.lcode.smartz" />
+        <package android:name="com.khaalijeb.inkdrops" />
+        <package android:name="com.msf.kbank.mobile" />
+        <package android:name="com.mobikwik_new" />
+        <package android:name="net.one97.paytm" />
+        <package android:name="com.phonepe.app" />
+        <package android:name="com.sbi.upi" />
+        <package android:name="com.YesBank" />
+        <package android:name="com.yesbank.yespaynext" />
+        <package android:name="com.naviapp" />
+        <package android:name="com.dreamplug.androidapp" />
+        <package android:name="com.phonepe.app.business" />
+        <package android:name="money.super.payments" />
+        <package android:name="com.sbi.lotusintouch" />
+        <package android:name="com.snapwork.hdfc" />
+        <package android:name="com.hdfcbank.payzapp" />
+        <package android:name="com.idfcfirstbank.optimus" />
+        <package android:name="com.bankofbaroda.mconnect" />
+        <package android:name="com.axis.mobile" />
+        <package android:name="com.nextbillion.groww" />
+        <package android:name="com.myairtelapp" />
+        <package android:name="com.fss.indus" />
+        <package android:name="org.altruist.BajajExperia" />
+
+
+        <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+
+
+
+
+
     </queries>
 </manifest>

@@ -15,3 +15,6 @@
 
 ## 0.0.6
 * Change uri
+
+## 0.0.8
+* Add compatibility with Android 9

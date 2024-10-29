@@ -44,8 +44,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion = await _swiftUpiPlugin.getPlatformVersion() ??
-          'Unknown platform version';
+      platformVersion = await _swiftUpiPlugin.getPlatformVersion() ?? 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -69,10 +68,11 @@ class _MyAppState extends State<MyApp> {
         isLoading = false; // Set loading to false
       });
       for (var app in apps) {
-        print('App Name: ${app['name']}, Package Name: ${app['packageName']}');
+        log('App Name: ${app['name']}, Package Name: ${app['packageName']}', name: 'UPI App');
       }
     } on PlatformException catch (e) {
-      print("Failed to get UPI apps: '${e.message}'.");
+      // log("Failed to get UPI apps: '${e.message}'.", name: 'Permission');
+      log("Failed to get UPI apps: '${e.message}', code: '${e.code}'.", name: 'Permission');
       setState(() {
         isLoading = false; // Update loading state even on error
       });
@@ -89,21 +89,14 @@ class _MyAppState extends State<MyApp> {
   }
 
   // New method to start a transaction
-  void _startTransaction(
-      {required String recUpiId,
-      required String recName,
-      required String txnRefId,
-      required String txnNote,
-      required String amt,
-      required String app}) async {
+  void _startTransaction({required String recUpiId, required String recName, required String txnRefId, required String txnNote, required String amt, required String app}) async {
     Map<String, String> resultMap = {};
 
     try {
       final result = await _swiftUpiPlugin.startTransaction(
-        merchantId : '123',
-        currency : 'INR',
-        url : 'https://domain.in',
-
+        merchantId: '123',
+        currency: 'INR',
+        url: 'https://domain.in',
 
         receiverUpiId: recUpiId,
         // Replace with actual receiver UPI ID
@@ -116,7 +109,6 @@ class _MyAppState extends State<MyApp> {
         amount: amt,
         // Amount in INR (required)
         app: app, // Currency (default INR, optional)
-        
       );
 
       if (result != null) {
@@ -163,7 +155,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          centerTitle: true,
+          title: const Text('Swift UPI Plugin - Example App'),
         ),
         body: Column(
           children: [
@@ -185,13 +178,7 @@ class _MyAppState extends State<MyApp> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  _startTransaction(
-                                      recUpiId: recUpiId,
-                                      recName: 'Sakshi',
-                                      txnRefId: 'TXN123QWER',
-                                      txnNote: 'Check',
-                                      amt: '1.0',
-                                      app: upiApps[index]['packageName']);
+                                  _startTransaction(recUpiId: recUpiId, recName: 'Sakshi', txnRefId: 'TXN123QWER', txnNote: 'Check', amt: '1.0', app: upiApps[index]['packageName']);
                                 },
                                 child: _buildAppIcon(upiApps[index]['icon']),
                               ),
