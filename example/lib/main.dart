@@ -11,7 +11,6 @@ void main() {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -48,15 +47,9 @@ class _MyAppState extends State<MyApp> {
     // We also handle the message potentially returning null.
     try {
       platformVersion = await _swiftUpiPlugin.getPlatformVersion() ?? 'Unknown platform version';
-
-      // String majorVersion = platformVersion.split(' ')[1].split('.')[0];
-
       setState(() {
         _platformVersionCode = platformVersion.split(' ')[1].split('.')[0];
       });
-
-
-
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -87,31 +80,6 @@ class _MyAppState extends State<MyApp> {
   //     log("Failed to get UPI apps: '${e.message}', code: '${e.code}'.", name: 'Permission');
   //     setState(() {
   //       isLoading = false; // Update loading state even on error
-  //     });
-  //   }
-  // }
-
-  // Future<void> fetchUpiApps() async {
-  //   try {
-  //     if (Platform.isAndroid && int.parse(_platformVersionCode) >= 30) {
-  //       // Check if QUERY_ALL_PACKAGES permission is granted
-  //       // Use a package like `permission_handler` for this
-  //
-  //       final List<dynamic> apps = await _swiftUpiPlugin.getAllUpiApps();
-  //       setState(() {
-  //         upiApps = apps;
-  //         isLoading = false;
-  //       });
-  //       for (var app in apps) {
-  //         log('App Name: ${app['name']}, Package Name: ${app['packageName']}', name: 'UPI App');
-  //       }
-  //     } else {
-  //       log("QUERY_ALL_PACKAGES not required for this Android version.");
-  //     }
-  //   } on PlatformException catch (e) {
-  //     log("Failed to get UPI apps: '${e.message}', code: '${e.code}'.", name: 'Permission');
-  //     setState(() {
-  //       isLoading = false;
   //     });
   //   }
   // }
@@ -204,7 +172,14 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Swift UPI Plugin - Example App'),
+          title: const Text(
+            'Swift UPI Plugin - Example App',
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         body: Column(
           children: [
@@ -214,34 +189,39 @@ class _MyAppState extends State<MyApp> {
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
-                : Expanded(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      child: ListView.builder(
-                        itemCount: upiApps.length,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.25,
-                            child: Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    _startTransaction(
-                                        recUpiId: recUpiId, recName: 'Sakshi', txnRefId: 'TXN123QWER', txnNote: 'Check', amt: '1.0', app: upiApps[index]['packageName']);
-                                  },
-                                  child: _buildAppIcon(upiApps[index]['icon']),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(upiApps[index]['name'])
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                : SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.125,
+                    child: ListView.builder(
+                      itemCount: upiApps.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          child: Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  _startTransaction(
+                                    recUpiId: recUpiId,
+                                    recName: 'UPI TEST',
+                                    txnRefId: 'TXN123QWER',
+                                    txnNote: 'Check',
+                                    amt: '1.0',
+                                    app: upiApps[index]['packageName'],
+                                  );
+                                },
+                                child: _buildAppIcon(upiApps[index]['icon']),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(upiApps[index]['name'])
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
+            const Spacer(),
             Card(
               elevation: 4,
               margin: const EdgeInsets.all(24),
@@ -251,64 +231,52 @@ class _MyAppState extends State<MyApp> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Transaction ID',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(txnId),
-                          const SizedBox(height: 8),
-                          const Divider(),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        const Text(
+                          'Transaction ID',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(txnId),
+                        const SizedBox(height: 8),
+                        const Divider(),
+                      ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Response Code',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(responseCode),
-                          const SizedBox(height: 8),
-                          const Divider(),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        const Text(
+                          'Response Code',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(responseCode),
+                        const SizedBox(height: 8),
+                        const Divider(),
+                      ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Transaction Reference',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(txnRef),
-                          const SizedBox(height: 8),
-                          const Divider(),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        const Text(
+                          'Transaction Reference',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(txnRef),
+                        const SizedBox(height: 8),
+                        const Divider(),
+                      ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Status',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(status),
-                          const SizedBox(height: 8),
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        const Text(
+                          'Status',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(status),
+                        const SizedBox(height: 8),
+                      ],
                     ),
                   ],
                 ),

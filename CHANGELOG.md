@@ -18,3 +18,6 @@
 
 ## 0.0.8
 * Add compatibility with Android 9
+
+## 0.0.9
+* UPI apps are showing in the older android devices
