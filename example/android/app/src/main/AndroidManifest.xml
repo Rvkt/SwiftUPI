@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        android:maxSdkVersion="30"/>
 
     <application
         android:label="swift_upi_example"
@@ -44,6 +44,7 @@
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="upi" />
         </intent>
 

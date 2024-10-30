@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -11,6 +11,7 @@ void main() {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -20,6 +21,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  String _platformVersionCode = '0';
   final _swiftUpiPlugin = SwiftUpi();
   static const platform = MethodChannel('swift_upi');
   List<dynamic> upiApps = [];
@@ -35,7 +37,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
-    fetchUpiApps();
+    // fetchUpiApps();
+    _getInstalledUpiApps();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -45,6 +48,15 @@ class _MyAppState extends State<MyApp> {
     // We also handle the message potentially returning null.
     try {
       platformVersion = await _swiftUpiPlugin.getPlatformVersion() ?? 'Unknown platform version';
+
+      // String majorVersion = platformVersion.split(' ')[1].split('.')[0];
+
+      setState(() {
+        _platformVersionCode = platformVersion.split(' ')[1].split('.')[0];
+      });
+
+
+
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -59,23 +71,59 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<void> fetchUpiApps() async {
-    try {
-      final List<dynamic> apps = await _swiftUpiPlugin.getAllUpiApps();
-      // Process the list of UPI apps
-      setState(() {
-        upiApps = apps; // Update the state with the list of apps
-        isLoading = false; // Set loading to false
-      });
-      for (var app in apps) {
-        log('App Name: ${app['name']}, Package Name: ${app['packageName']}', name: 'UPI App');
-      }
-    } on PlatformException catch (e) {
-      // log("Failed to get UPI apps: '${e.message}'.", name: 'Permission');
-      log("Failed to get UPI apps: '${e.message}', code: '${e.code}'.", name: 'Permission');
-      setState(() {
-        isLoading = false; // Update loading state even on error
-      });
+  // Future<void> fetchUpiApps() async {
+  //   try {
+  //     final List<dynamic> apps = await _swiftUpiPlugin.getAllUpiApps();
+  //     // Process the list of UPI apps
+  //     setState(() {
+  //       upiApps = apps; // Update the state with the list of apps
+  //       isLoading = false; // Set loading to false
+  //     });
+  //     for (var app in apps) {
+  //       log('App Name: ${app['name']}, Package Name: ${app['packageName']}', name: 'UPI App');
+  //     }
+  //   } on PlatformException catch (e) {
+  //     // log("Failed to get UPI apps: '${e.message}'.", name: 'Permission');
+  //     log("Failed to get UPI apps: '${e.message}', code: '${e.code}'.", name: 'Permission');
+  //     setState(() {
+  //       isLoading = false; // Update loading state even on error
+  //     });
+  //   }
+  // }
+
+  // Future<void> fetchUpiApps() async {
+  //   try {
+  //     if (Platform.isAndroid && int.parse(_platformVersionCode) >= 30) {
+  //       // Check if QUERY_ALL_PACKAGES permission is granted
+  //       // Use a package like `permission_handler` for this
+  //
+  //       final List<dynamic> apps = await _swiftUpiPlugin.getAllUpiApps();
+  //       setState(() {
+  //         upiApps = apps;
+  //         isLoading = false;
+  //       });
+  //       for (var app in apps) {
+  //         log('App Name: ${app['name']}, Package Name: ${app['packageName']}', name: 'UPI App');
+  //       }
+  //     } else {
+  //       log("QUERY_ALL_PACKAGES not required for this Android version.");
+  //     }
+  //   } on PlatformException catch (e) {
+  //     log("Failed to get UPI apps: '${e.message}', code: '${e.code}'.", name: 'Permission');
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+  Future<void> _getInstalledUpiApps() async {
+    final List<dynamic> apps = await _swiftUpiPlugin.getAllUpiApps();
+    setState(() {
+      upiApps = apps;
+      isLoading = false;
+    });
+    for (var app in apps) {
+      log('App Name: ${app['name']}, Package Name: ${app['packageName']}', name: 'UPI App');
     }
   }
 
@@ -162,42 +210,36 @@ class _MyAppState extends State<MyApp> {
           children: [
             Text('Running on: $_platformVersion\n'),
             Text('Paying on: $recUpiId\n'),
-            const SizedBox(height: 24),
             isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    child: ListView.builder(
-                      itemCount: upiApps.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          child: Column(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  _startTransaction(recUpiId: recUpiId, recName: 'Sakshi', txnRefId: 'TXN123QWER', txnNote: 'Check', amt: '1.0', app: upiApps[index]['packageName']);
-                                },
-                                child: _buildAppIcon(upiApps[index]['icon']),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(upiApps[index]['name'])
-                              // ListTile(
-                              //   leading: _buildAppIcon(upiApps[index]['icon']), // Build app icon
-                              //   title: Text(upiApps[index]['name']),
-                              //   // subtitle: Text(upiApps[index]['packageName']),
-                              //   onTap: () {
-                              //     // Handle app selection
-                              //     _startTransaction(recUpiId: recUpiId, recName: 'RAVI KANT', txnRefId: '123', txnNote: 'Check', amt: '1.00', app: upiApps[index]['packageName']);
-                              //     // _openUpiApp(upiApps[index]['packageName']);
-                              //   },
-                              // ),
-                            ],
-                          ),
-                        );
-                      },
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Expanded(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: ListView.builder(
+                        itemCount: upiApps.length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    _startTransaction(
+                                        recUpiId: recUpiId, recName: 'Sakshi', txnRefId: 'TXN123QWER', txnNote: 'Check', amt: '1.0', app: upiApps[index]['packageName']);
+                                  },
+                                  child: _buildAppIcon(upiApps[index]['icon']),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(upiApps[index]['name'])
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
             Card(
