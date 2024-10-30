@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -40,7 +41,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
   private Activity activity; // To hold the activity reference
   private Result finalResult; // To hold the result reference for async response
 
-  static final String TAG = "UPI INDIA";
+  static final String TAG = "SWIFT UPI";
   static final int uniqueRequestCode = 512078;
   private boolean resultReturned;
 
@@ -71,9 +72,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
     }
   }
 
-  // Method to get all apps on the device that can handle UPI Intent.
   private void getAllUpiApps() {
-
     if (activity == null) {
       if (finalResult != null) {
         finalResult.error("activity_missing", "No attached activity found!", null);
@@ -81,33 +80,34 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       return;
     }
 
-// Check for permissions
-    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.QUERY_ALL_PACKAGES)
-            != PackageManager.PERMISSION_GRANTED) {
-      // Request the permission
-      ActivityCompat.requestPermissions(activity,
-              new String[]{Manifest.permission.QUERY_ALL_PACKAGES},
-              PERMISSION_REQUEST_CODE);
-      return; // Don't continue if permission is not granted
-    }
-
     List<Map<String, Object>> packages = new ArrayList<>();
-
     Intent intent = new Intent(Intent.ACTION_VIEW);
     String uriString = "upi://pay?pa=test@upi&pn=Test&tn=GetAllApps&am=10.00&cu=INR&mode=04";
-//    String uriString = "upi://pay";
     Uri uri = Uri.parse(uriString);
     intent.setData(uri);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-
-    if (activity == null) {
-      finalResult.error("activity_missing", "No attached activity found!", null);
-      return;
-    }
-
     PackageManager pm = activity.getPackageManager();
-    List<ResolveInfo> resolveInfoList = pm.queryIntentActivities(intent, 0);
+    List<ResolveInfo> resolveInfoList;
+
+    // Check the Android version
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // Android 11+
+      // Only check for permission if the device is Android 11 or higher
+      if (ContextCompat.checkSelfPermission(activity, Manifest.permission.QUERY_ALL_PACKAGES)
+              != PackageManager.PERMISSION_GRANTED) {
+        // Request the permission
+        ActivityCompat.requestPermissions(activity,
+                new String[]{Manifest.permission.QUERY_ALL_PACKAGES},
+                PERMISSION_REQUEST_CODE);
+        return; // Don't continue if permission is not granted
+      }
+
+      // If permission is granted, proceed to query apps
+      resolveInfoList = pm.queryIntentActivities(intent, 0);
+    } else {
+      // For older Android versions, proceed without checking for the permission
+      resolveInfoList = pm.queryIntentActivities(intent, 0);
+    }
 
     if (resolveInfoList.isEmpty()) {
       Log.d(TAG, "No apps found for UPI intent.");
@@ -135,14 +135,91 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
         packages.add(m);
       } catch (Exception e) {
-        e.printStackTrace();
-        finalResult.error("package_get_failed", "Failed to get list of installed UPI apps", null);
-        return;
+        Log.e(TAG, "Failed to get package details", e);
       }
     }
 
-    finalResult.success(packages);
+    // Return the results
+    if (finalResult != null) {
+      finalResult.success(packages);
+    } else {
+      Log.e(TAG, "Final result callback is null.");
+    }
   }
+
+
+  // Method to get all apps on the device that can handle UPI Intent.
+//  private void getAllUpiApps() {
+//
+//    if (activity == null) {
+//      if (finalResult != null) {
+//        finalResult.error("activity_missing", "No attached activity found!", null);
+//      }
+//      return;
+//    }
+//
+//// Check for permissions
+//    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.QUERY_ALL_PACKAGES)
+//            != PackageManager.PERMISSION_GRANTED) {
+//      // Request the permission
+//      ActivityCompat.requestPermissions(activity,
+//              new String[]{Manifest.permission.QUERY_ALL_PACKAGES},
+//              PERMISSION_REQUEST_CODE);
+//      return; // Don't continue if permission is not granted
+//    }
+//
+//    List<Map<String, Object>> packages = new ArrayList<>();
+//
+//    Intent intent = new Intent(Intent.ACTION_VIEW);
+//    String uriString = "upi://pay?pa=test@upi&pn=Test&tn=GetAllApps&am=10.00&cu=INR&mode=04";
+////    String uriString = "upi://pay";
+//    Uri uri = Uri.parse(uriString);
+//    intent.setData(uri);
+//    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//
+//    if (activity == null) {
+//      finalResult.error("activity_missing", "No attached activity found!", null);
+//      return;
+//    }
+//
+//    PackageManager pm = activity.getPackageManager();
+//    List<ResolveInfo> resolveInfoList = pm.queryIntentActivities(intent, 0);
+//
+//    if (resolveInfoList.isEmpty()) {
+//      Log.d(TAG, "No apps found for UPI intent.");
+//    } else {
+//      Log.d(TAG, "UPI apps found: " + resolveInfoList.size());
+//    }
+//
+//    for (ResolveInfo resolveInfo : resolveInfoList) {
+//      try {
+//        String packageName = resolveInfo.activityInfo.packageName;
+//        String name = (String) pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA));
+//        Drawable dIcon = pm.getApplicationIcon(packageName);
+//        Bitmap bIcon = getBitmapFromDrawable(dIcon);
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bIcon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        byte[] icon = stream.toByteArray();
+//
+//        Log.d(TAG, "UPI App Found: " + name + " (" + packageName + ")");
+//        Log.d(TAG, "Activity Info: " + resolveInfo.activityInfo.toString());
+//
+//        Map<String, Object> m = new HashMap<>();
+//        m.put("packageName", packageName);
+//        m.put("name", name);
+//        m.put("icon", icon);
+//
+//        packages.add(m);
+//      } catch (Exception e) {
+//        e.printStackTrace();
+//        finalResult.error("package_get_failed", "Failed to get list of installed UPI apps", null);
+//        return;
+//      }
+//    }
+//
+//    finalResult.success(packages);
+//  }
 
   // Helper method to convert Drawable to Bitmap
   private Bitmap getBitmapFromDrawable(Drawable drawable) {
@@ -243,8 +320,6 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
   public void onAttachedToActivity(ActivityPluginBinding binding) {
     this.activity = binding.getActivity();
-
-
 
     binding.addActivityResultListener((requestCode, resultCode, data) -> {
       if (requestCode == uniqueRequestCode) {
