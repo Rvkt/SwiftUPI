@@ -21,3 +21,6 @@
 
 ## 0.0.9
 * UPI apps are showing in the older android devices
+
+## 0.0.10
+* UPI should be visible in the android 14

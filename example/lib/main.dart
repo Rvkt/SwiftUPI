@@ -36,7 +36,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
-    // fetchUpiApps();
     _getInstalledUpiApps();
   }
 
@@ -211,7 +210,9 @@ class _MyAppState extends State<MyApp> {
                                     app: upiApps[index]['packageName'],
                                   );
                                 },
-                                child: _buildAppIcon(upiApps[index]['icon']),
+                                child: _buildAppIcon(
+                                  upiApps[index]['icon'],
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Text(upiApps[index]['name'])
