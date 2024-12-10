@@ -37,4 +37,6 @@ abstract class SwiftUpiPlatform extends PlatformInterface {
 
   /// Starts a UPI transaction with the provided parameters.
   Future<String?> startTransaction(Map<String, String?> transactionDetails);
+
+  Future<void> showCustomUi();
 }

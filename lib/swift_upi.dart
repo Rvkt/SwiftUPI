@@ -38,4 +38,9 @@ class SwiftUpi {
       'app': app,
     });
   }
+
+  // Function to show the custom UI
+  Future<void> showCustomUi() async {
+    await SwiftUpiPlatform.instance.showCustomUi();
+  }
 }

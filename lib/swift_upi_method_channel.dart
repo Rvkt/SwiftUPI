@@ -11,31 +11,31 @@ class MethodChannelSwiftUpi extends SwiftUpiPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
   @override
   Future<List<dynamic>> getAllUpiApps() async {
-    final List<dynamic> apps =
-        await methodChannel.invokeMethod('getAllUpiApps');
+    final List<dynamic> apps = await methodChannel.invokeMethod('getAllUpiApps');
     return apps;
   }
 
   @override
   Future<String?> launchUpiApp(String packageName) async {
-    final String? result = await methodChannel
-        .invokeMethod('launchUpiApp', {'packageName': packageName});
+    final String? result = await methodChannel.invokeMethod('launchUpiApp', {'packageName': packageName});
     return result;
   }
 
   @override
   @override
-  Future<String?> startTransaction(
-      Map<String, String?> transactionDetails) async {
-    final String? result = await methodChannel.invokeMethod(
-        'startTransaction', transactionDetails);
+  Future<String?> startTransaction(Map<String, String?> transactionDetails) async {
+    final String? result = await methodChannel.invokeMethod('startTransaction', transactionDetails);
     return result;
+  }
+
+  @override
+  Future<void> showCustomUi() async {
+    await methodChannel.invokeMethod('showCustomUi');
   }
 }

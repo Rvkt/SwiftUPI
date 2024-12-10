@@ -165,6 +165,16 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  // TODO: Show the UI
+  void displayCustomUi() async {
+    try {
+      await _swiftUpiPlugin.showCustomUi();
+      print("Custom UI displayed successfully.");
+    } catch (e) {
+      print("Error displaying custom UI: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -184,6 +194,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             Text('Running on: $_platformVersion\n'),
             Text('Paying on: $recUpiId\n'),
+            ElevatedButton(onPressed: displayCustomUi, child: Text('Show UI')),
             isLoading
                 ? const Center(
                     child: CircularProgressIndicator(),
