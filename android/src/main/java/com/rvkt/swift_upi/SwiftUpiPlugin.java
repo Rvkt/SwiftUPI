@@ -13,6 +13,11 @@ import android.os.Bundle;
 import android.os.Build;
 import android.util.Log;
 
+import android.widget.LinearLayout;
+import android.widget.Button;
+import android.content.Context;
+
+
 import androidx.annotation.NonNull;
 
 import java.io.ByteArrayOutputStream;
@@ -49,6 +54,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
 
 
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "swift_upi");
@@ -64,13 +70,20 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       getAllUpiApps(); // Call the method to get UPI apps
     } else if (call.method.equals("launchUpiApp")) {
       String packageName = call.argument("packageName");
-      launchUpiApp(packageName, result);
+      launchUpiApp(packageName, result, activity);
     } else if (call.method.equals("startTransaction")) {
       startTransaction(call, result); // Handle the start transaction request
-    } else {
+    } else if (call.method.equals("showCustomUi")) {
+      showCustomUi();
+      result.success("Custom UI displayed");
+    }
+
+
+    else {
       result.notImplemented();
     }
   }
+
 
   private void getAllUpiApps() {
     if (activity == null) {
@@ -149,6 +162,19 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
     }
   }
 
+  private void showCustomUi() {
+    if (activity == null) {
+      if (finalResult != null) {
+        finalResult.error("activity_missing", "No attached activity found!", null);
+      }
+      return;
+    }
+
+    Intent intent = new Intent(activity, SwiftUpiActivity.class);
+    activity.startActivity(intent);
+  }
+
+
   // Helper method to convert Drawable to Bitmap
   private Bitmap getBitmapFromDrawable(Drawable drawable) {
     if (drawable instanceof BitmapDrawable) {
@@ -164,11 +190,11 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
   }
 
   // Method to launch the UPI app
-  private void launchUpiApp(String packageName, Result result) {
-    PackageManager pm = activity.getPackageManager();
+  public void launchUpiApp(String packageName, Result result, Activity launnchActivity) {
+    PackageManager pm = launnchActivity.getPackageManager();
     Intent launchIntent = pm.getLaunchIntentForPackage(packageName);
     if (launchIntent != null) {
-      activity.startActivity(launchIntent);
+      launnchActivity.startActivity(launchIntent);
       result.success("App launched successfully");
     } else {
       result.error("PACKAGE_NOT_FOUND", "UPI app not found", null);
