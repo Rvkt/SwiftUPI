@@ -74,7 +74,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
     } else if (call.method.equals("startTransaction")) {
       startTransaction(call, result); // Handle the start transaction request
     } else if (call.method.equals("showCustomUi")) {
-      showCustomUi();
+      showCustomUi(call, result);
       result.success("Custom UI displayed");
     }
 
@@ -162,7 +162,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
     }
   }
 
-  private void showCustomUi() {
+  private void showCustomUi(MethodCall call, Result finalResult) {
     if (activity == null) {
       if (finalResult != null) {
         finalResult.error("activity_missing", "No attached activity found!", null);
@@ -170,9 +170,35 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       return;
     }
 
+    // Extract the arguments from the MethodCall
+    String app = call.argument("app") != null ? call.argument("app") : "in.org.npci.upiapp"; // Default UPI app
+    String receiverUpiId = call.argument("receiverUpiId");
+    String receiverName = call.argument("receiverName");
+    String transactionRefId = call.argument("transactionRefId");
+    String transactionNote = call.argument("transactionNote");
+    String amount = call.argument("amount");
+    String currency = call.argument("currency");
+    String url = call.argument("url");
+    String merchantId = call.argument("merchantId");
+
+    // Create an intent to start SwiftUpiActivity
     Intent intent = new Intent(activity, SwiftUpiActivity.class);
+
+    // Pass the extracted parameters to the intent
+    intent.putExtra("app", app);
+    intent.putExtra("receiverUpiId", receiverUpiId);
+    intent.putExtra("receiverName", receiverName);
+    intent.putExtra("transactionRefId", transactionRefId);
+    intent.putExtra("transactionNote", transactionNote);
+    intent.putExtra("amount", amount);
+    intent.putExtra("currency", currency);
+    intent.putExtra("url", url);
+    intent.putExtra("merchantId", merchantId);
+
+    // Start the activity
     activity.startActivity(intent);
   }
+
 
 
   // Helper method to convert Drawable to Bitmap

@@ -194,7 +194,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             Text('Running on: $_platformVersion\n'),
             Text('Paying on: $recUpiId\n'),
-            ElevatedButton(onPressed: displayCustomUi, child: Text('Show UI')),
+            ElevatedButton(onPressed: displayCustomUi, child: const Text('Show UI')),
             isLoading
                 ? const Center(
                     child: CircularProgressIndicator(),

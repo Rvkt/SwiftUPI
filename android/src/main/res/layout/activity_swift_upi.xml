@@ -4,11 +4,102 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+		<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Displaying App Name -->
+    <TextView
+        android:id="@+id/text_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="App: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying Receiver UPI ID -->
+    <TextView
+        android:id="@+id/text_receiver_upi_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Receiver UPI ID: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying Receiver Name -->
+    <TextView
+        android:id="@+id/text_receiver_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Receiver Name: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying Transaction Reference ID -->
+    <TextView
+        android:id="@+id/text_transaction_ref_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction Ref ID: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying Transaction Note -->
+    <TextView
+        android:id="@+id/text_transaction_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction Note: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying Amount -->
+    <TextView
+        android:id="@+id/text_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying Currency -->
+    <TextView
+        android:id="@+id/text_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Currency: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying URL -->
+    <TextView
+        android:id="@+id/text_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="URL: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+    <!-- Displaying Merchant ID -->
+    <TextView
+        android:id="@+id/text_merchant_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Merchant ID: "
+        android:textSize="16sp"
+        android:layout_marginTop="10dp" />
+
+</LinearLayout>
+
+
     <!-- Vertical LinearLayout inside ScrollView -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+			
         android:padding="16dp">
 
         <!-- Transaction Status TextView -->
@@ -33,257 +124,180 @@
             android:src="@drawable/ic_qrcode" />
 
         <!-- Recommended TextView -->
-        <TextView
+
+
+            <TextView
             android:id="@+id/recommended"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Recommended"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp" />
+            android:textSize="16sp"
+            android:paddingStart="8dp"
+            android:paddingEnd="16dp"
+            android:textColor="#3F51B5"
+            android:textStyle="bold"
+            android:gravity="start|center_vertical"
+            android:layout_marginBottom="24dp" />
+
+
 
         <!-- Horizontal Layout for UPI APPS Buttons -->
-<GridLayout
+
+        <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:columnCount="4"
-    android:layout_marginBottom="16dp"
-    android:orientation="horizontal"
-    android:gravity="center_horizontal">
+    android:orientation="vertical"
+    android:padding="0dp"
+		android:layout_marginBottom="24dp"
+    android:background="@drawable/linear_layout_border"
+    android:gravity="start|center_vertical"
+    >
+
+
+
 
     <!-- PhonePe Button -->
     <Button
-        android:id="@+id/open_app"
-        android:layout_width="0dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1"
+        android:id="@+id/open_phonepe"
+        android:text="UPI - PhonePe"
+        android:drawableLeft="@drawable/ic_phonepe"
+        android:drawableRight="@drawable/ic_arrow_right"
         android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="PhonePe"
-        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="0dp"
+        android:drawablePadding="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textSize="16sp"
+        android:gravity="start|center_vertical"
         android:textColor="@color/black" />
+
+                <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="#D3D3D3" />
 
     <!-- Google Pay Button -->
+
     <Button
         android:id="@+id/open_gpay"
-        android:layout_width="0dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1"
+        android:text="UPI - Gpay"
+        android:drawableLeft="@drawable/ic_googlepay"
+        android:drawableRight="@drawable/ic_arrow_right"
         android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Google Pay"
-        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="0dp"
+        android:drawablePadding="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textSize="16sp"
+        android:gravity="start|center_vertical"
         android:textColor="@color/black" />
+
+                <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="#D3D3D3" />        
 
     <!-- Paytm Button -->
+
     <Button
         android:id="@+id/open_paytm"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
+        android:text="UPI - Paytm"
+        android:drawableLeft="@drawable/ic_paytm"
+        android:drawableRight="@drawable/ic_arrow_right"
         android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Paytm"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="0dp"
+        android:drawablePadding="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textSize="16sp"
+        android:gravity="start|center_vertical"
+        android:textColor="@color/black" />  
 
-    <!-- Groww Button -->
-    <Button
-        android:id="@+id/open_groww"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Groww"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
+</LinearLayout>
 
-    <!-- Groww 2 Button -->
-    <Button
-        android:id="@+id/open_groww1"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Groww 2"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
+			<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+		android:background="@drawable/linear_layout_border"
+    android:padding="16dp">
 
-    <!-- Groww 3 Button -->
-    <Button
-        android:id="@+id/open_groww2"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Groww 3"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
+    <!-- TextView: "All Payment Options" -->
+    <TextView
+        android:id="@+id/payment_options_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All Payment Options"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"
+        android:gravity="center" />
+				
 
-    <!-- Groww 4 Button -->
-    <Button
-        android:id="@+id/open_groww3"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Groww 4"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
+    <!-- GridLayout: containing payment option buttons -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
 
-    <!-- Groww 5 Button -->
-    <Button
-        android:id="@+id/open_groww4"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Groww 5"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
+        <!-- First Button -->
+        <Button
+            android:id="@+id/open_paytm"
+            android:text="Groww"
+            android:drawableLeft="@drawable/ic_paytm"
+            android:background="@drawable/grid_rounded_button"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="0dp"
+            android:layout_columnWeight="1"
+            android:drawablePadding="24dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:textSize="16sp"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/black" />
 
-    <!-- Groww 6 Button -->
+        <!-- Second Button -->
+        <Button
+            android:id="@+id/open_paytm"
+            android:text="Groww"
+            android:drawableLeft="@drawable/ic_paytm"
+            android:background="@drawable/grid_rounded_button"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="0dp"
+            android:layout_columnWeight="1"
+            android:drawablePadding="24dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:textSize="16sp"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/black" />
+        
+    </GridLayout>
+		<!-- Button to load more -->
     <Button
-        android:id="@+id/open_groww5"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Groww 6"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
-
-    <!-- Button 1 -->
-    <Button
-        android:id="@+id/open_button1"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Button 1"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
-
-    <!-- Button 2 -->
-    <Button
-        android:id="@+id/open_button2"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Button 2"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
-
-    <!-- Button 3 -->
-    <Button
-        android:id="@+id/open_button3"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Button 3"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
-
-    <!-- Button 4 -->
-    <Button
-        android:id="@+id/open_button4"
-        android:layout_width="0dp" 
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_columnWeight="1" 
-        android:background="@drawable/rounded_button"
-        android:drawableTop="@drawable/ic_phonepe"
-        android:drawablePadding="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Button 4"
-        android:textSize="12sp"
-        android:textColor="@color/black" />
-</GridLayout>
+        android:id="@+id/load_more_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Load More"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:visibility="gone"/>
+</LinearLayout>
 
 
         <!-- Close Button -->
