@@ -27,7 +27,7 @@ class MethodChannelSwiftUpi extends SwiftUpiPlatform {
     return result;
   }
 
-  @override
+  // @override
   @override
   Future<String?> startTransaction(Map<String, String?> transactionDetails) async {
     final String? result = await methodChannel.invokeMethod('startTransaction', transactionDetails);
@@ -35,7 +35,8 @@ class MethodChannelSwiftUpi extends SwiftUpiPlatform {
   }
 
   @override
-  Future<void> showCustomUi() async {
-    await methodChannel.invokeMethod('showCustomUi');
+  Future<String?> showCustomUi(Map<String, String?> transactionDetails) async {
+    final String? result = await methodChannel.invokeMethod('showCustomUi', transactionDetails);
+    return result;
   }
 }

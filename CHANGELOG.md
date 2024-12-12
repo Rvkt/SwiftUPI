@@ -24,3 +24,6 @@
 
 ## 0.0.10
 * UPI should be visible in the android 14
+
+## 0.0.11
+* Solve the permission issue

@@ -166,9 +166,25 @@ class _MyAppState extends State<MyApp> {
   }
 
   // TODO: Show the UI
-  void displayCustomUi() async {
+  void displayCustomUi({required String recUpiId, required String recName, required String txnRefId, required String txnNote, required String amt, required String app}) async {
     try {
-      await _swiftUpiPlugin.showCustomUi();
+      await _swiftUpiPlugin.showCustomUi(
+        merchantId: '123',
+        currency: 'INR',
+        url: 'https://domain.in',
+
+        receiverUpiId: recUpiId,
+        // Replace with actual receiver UPI ID
+        receiverName: recName,
+        // Replace with actual receiver name
+        transactionRefId: txnRefId,
+        // Replace with a unique transaction reference ID (optional)
+        transactionNote: txnNote,
+        // Replace with a transaction note (optional)
+        amount: amt,
+        // Amount in INR (required)
+        app: app,
+      );
       print("Custom UI displayed successfully.");
     } catch (e) {
       print("Error displaying custom UI: $e");
@@ -194,7 +210,18 @@ class _MyAppState extends State<MyApp> {
           children: [
             Text('Running on: $_platformVersion\n'),
             Text('Paying on: $recUpiId\n'),
-            ElevatedButton(onPressed: displayCustomUi, child: const Text('Show UI')),
+            ElevatedButton(
+                onPressed: () {
+                  displayCustomUi(
+                    recUpiId: recUpiId,
+                    recName: 'UPI TEST',
+                    txnRefId: 'TXN123QWER',
+                    txnNote: 'Check',
+                    amt: '1.0',
+                    app: 'upiApps[index][packageName]',
+                  );
+                },
+                child: const Text('Show UI')),
             isLoading
                 ? const Center(
                     child: CircularProgressIndicator(),
@@ -212,6 +239,7 @@ class _MyAppState extends State<MyApp> {
                             children: [
                               InkWell(
                                 onTap: () {
+                                  // todo: start transaction
                                   _startTransaction(
                                     recUpiId: recUpiId,
                                     recName: 'UPI TEST',

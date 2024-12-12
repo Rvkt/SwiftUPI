@@ -48,6 +48,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
 
   static final String TAG = "SWIFT UPI";
   static final int uniqueRequestCode = 512078;
+  static final int uniqueReqCode = 512079;
   private boolean resultReturned;
 
   private static final int PERMISSION_REQUEST_CODE = 100;
@@ -73,12 +74,12 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       launchUpiApp(packageName, result, activity);
     } else if (call.method.equals("startTransaction")) {
       startTransaction(call, result); // Handle the start transaction request
-    } else if (call.method.equals("showCustomUi")) {
+    }
+
+    else if (call.method.equals("showCustomUi")) {
       showCustomUi(call, result);
       result.success("Custom UI displayed");
     }
-
-
     else {
       result.notImplemented();
     }
@@ -163,6 +164,8 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
   }
 
   private void showCustomUi(MethodCall call, Result finalResult) {
+    String app = call.argument("app");
+    Log.d(TAG, app + " is clicked");
     if (activity == null) {
       if (finalResult != null) {
         finalResult.error("activity_missing", "No attached activity found!", null);
@@ -171,7 +174,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
     }
 
     // Extract the arguments from the MethodCall
-    String app = call.argument("app") != null ? call.argument("app") : "in.org.npci.upiapp"; // Default UPI app
+//    String app = call.argument("app") != null ? call.argument("app") : "in.org.npci.upiapp"; // Default UPI app
     String receiverUpiId = call.argument("receiverUpiId");
     String receiverName = call.argument("receiverName");
     String transactionRefId = call.argument("transactionRefId");
@@ -271,7 +274,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       intent.setPackage(app); // Set the package for the specified app
 
       // Check if the app is installed and start the activity
-      if (isAppInstalled(app)) {
+      if (isAppInstalled(app, activity)) {
         activity.startActivityForResult(intent, uniqueRequestCode);
       } else {
         Log.d(TAG, app + " not installed on the device.");
@@ -283,7 +286,73 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
     }
   }
 
-  private boolean isAppInstalled(String packageName) {
+  public void startTxn(
+          Activity activity,
+          String app,
+          String receiverUpiId,
+          String receiverName,
+          String transactionRefId,
+          String transactionNote,
+          String amount,
+          String currency,
+          String url,
+          String merchantId,
+          Result finalResult
+  ) {
+    resultReturned = false;
+
+    // Set default app if not provided
+    if (app == null || app.isEmpty()) {
+      app = "in.org.npci.upiapp"; // Default UPI app
+    }
+
+    // Build the UPI URI
+    try {
+      String uriString = "upi://pay?pa=" + receiverUpiId +
+              "&pn=" + Uri.encode(receiverName) +
+              "&am=" + Uri.encode(amount);
+
+      if (transactionNote != null && !transactionNote.isEmpty()) {
+        uriString += "&tn=" + Uri.encode(transactionNote);
+      }
+      if (transactionRefId != null && !transactionRefId.isEmpty()) {
+        uriString += "&tr=" + Uri.encode(transactionRefId);
+      }
+      if (currency == null || currency.isEmpty()) {
+        uriString += "&cu=INR"; // Default currency
+      } else {
+        uriString += "&cu=" + Uri.encode(currency);
+      }
+      if (url != null && !url.isEmpty()) {
+        uriString += "&url=" + Uri.encode(url);
+      }
+      if (merchantId != null && !merchantId.isEmpty()) {
+        uriString += "&mc=" + Uri.encode(merchantId);
+      }
+      uriString += "&mode=04"; // Optional mode
+
+      Uri uri = Uri.parse(uriString);
+
+      // Create an intent to launch the UPI app
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setData(uri);
+      intent.setPackage(app); // Set the package for the specified app
+
+      // Check if the app is installed and start the activity
+      if (isAppInstalled(app, activity)) {
+        activity.startActivityForResult(intent, uniqueReqCode);
+      } else {
+        Log.d(TAG, app + " not installed on the device.");
+        finalResult.error("app_not_installed", "Requested app not installed", null);
+      }
+    } catch (Exception ex) {
+      Log.d(TAG, "Error: " + ex);
+      finalResult.error("invalid_parameters", "Transaction parameters are invalid", null);
+    }
+  }
+
+
+  private boolean isAppInstalled(String packageName, Activity activity) {
     PackageManager packageManager = activity.getPackageManager();
     try {
       packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
@@ -318,6 +387,24 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
       }
       return false; // Pass through for other request codes
     });
+
+//    binding.addActivityResultListener((requestCode, resultCode, data) -> {
+//      if (requestCode == uniqueReqCode) {
+//        if (resultCode == Activity.RESULT_OK) {
+//          if (data != null) {
+//            String response = data.getStringExtra("response");
+//            // Send this response back to Flutter if necessary
+//            finalResult.success(response);
+//          } else {
+//            finalResult.error("no_response", "No response from UPI app", null);
+//          }
+//        } else {
+//          finalResult.error("transaction_failed", "Transaction failed or cancelled", null);
+//        }
+//        return true; // Indicate that you handled the result
+//      }
+//      return false; // Pass through for other request codes
+//    });
 
 
     binding.addRequestPermissionsResultListener((requestCode, permissions, grantResults) -> {
