@@ -44,7 +44,7 @@ class SwiftUpi {
     required String receiverUpiId,
     required String receiverName,
     required String amount,
-    required String app,
+    // required String app,
     String? transactionRefId,
     String? transactionNote,
     String? currency,
@@ -60,7 +60,7 @@ class SwiftUpi {
       'currency': currency,
       'url': url,
       'merchantId': merchantId,
-      'app': app,
+      // 'app': app,
     });
   }
 }

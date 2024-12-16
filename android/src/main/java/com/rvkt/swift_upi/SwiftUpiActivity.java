@@ -6,13 +6,19 @@ import android.content.Intent;
 import android.Manifest;
 import android.widget.Toast;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.view.animation.Animation;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+
 import android.view.animation.AnimationUtils;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -20,6 +26,9 @@ import io.flutter.embedding.engine.FlutterEngineCache;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.embedding.engine.dart.DartExecutor;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import android.widget.LinearLayout;
+import android.widget.GridLayout;
+import android.animation.ObjectAnimator;
 
 
 public class SwiftUpiActivity extends Activity {
@@ -35,7 +44,68 @@ public class SwiftUpiActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swift_upi);
 
-        String app = getIntent().getStringExtra("app");
+        // Link buttons from layout
+        Button btnPaytm = findViewById(R.id.btnPaytm);
+        Button btnPhonePe = findViewById(R.id.btnPhonePe);
+        Button btnGooglePay = findViewById(R.id.btnGooglePay);
+        Button btnAmazonPay = findViewById(R.id.btnAmazonPay);
+        Button btnAxis = findViewById(R.id.btnAxis);
+        Button btnBob = findViewById(R.id.btnBob);
+        Button btnBhimUpi = findViewById(R.id.btnBhimUpi);
+
+        Button btnCentralBank = findViewById(R.id.btnCentralBank);
+        Button btnBOI = findViewById(R.id.btnBOI);
+        Button btnCSB = findViewById(R.id.btnCSB);
+        Button btnCUB = findViewById(R.id.btnCUB);
+        Button btnDBS = findViewById(R.id.btnDBS);
+        Button btnEquitas = findViewById(R.id.btnEquitas);
+
+
+        // List of buttons and UPI packages
+        List<Button> buttons = Arrays.asList(btnPaytm, btnPhonePe, btnAmazonPay, btnGooglePay, btnAxis, btnBob, btnBhimUpi, btnCentralBank, btnBOI, btnCSB, btnCUB, btnDBS, btnEquitas);
+        List<String> upiPackages = Arrays.asList(
+                "net.one97.paytm",
+                "com.phonepe.app",
+                "in.amazon.mShop.android.shopping",
+                "com.google.android.apps.nbu.paisa.user",
+                "com.upi.axispay",
+                "com.bankofbaroda.upi",
+                "in.org.npci.upiapp",
+                "com.infrasofttech.centralbankupi",
+                "com.boi.ua.android",
+                "com.lcode.csbupi",
+                "com.cub.wallet.gui",
+                "com.dbs.in.digitalbank",
+                "com.equitasbank.upi",
+                "com.freecharge.android",
+                "com.mgs.hsbcupi",
+                "com.csam.icici.bank.imobile",
+                "com.mgs.induspsp",
+                "com.lcode.smartz",
+                "com.khaalijeb.inkdrops",
+                "com.msf.kbank.mobile",
+                "com.mobikwik_new",
+                "net.one97.paytm",
+                "com.phonepe.app",
+                "com.sbi.upi",
+                "com.YesBank",
+                "com.yesbank.yespaynext",
+                "com.naviapp",
+                "com.dreamplug.androidapp",
+                "com.phonepe.app.business",
+                "money.super.payments",
+                "com.sbi.lotusintouch",
+                "com.snapwork.hdfc",
+                "com.hdfcbank.payzapp",
+                "com.idfcfirstbank.optimus",
+                "com.bankofbaroda.mconnect",
+                "com.axis.mobile",
+                "com.nextbillion.groww",
+                "com.myairtelapp",
+                "com.fss.indus",
+                "org.altruist.BajajExperia");
+
+//        String app = getIntent().getStringExtra("app");
         String receiverUpiId = getIntent().getStringExtra("receiverUpiId");
         String receiverName = getIntent().getStringExtra("receiverName");
         String transactionRefId = getIntent().getStringExtra("transactionRefId");
@@ -45,96 +115,116 @@ public class SwiftUpiActivity extends Activity {
         String url = getIntent().getStringExtra("url");
         String merchantId = getIntent().getStringExtra("merchantId");
 
-        // Find the TextView elements
-//        TextView textApp = findViewById(R.id.text_app);
-//        TextView textReceiverUpiId = findViewById(R.id.text_receiver_upi_id);
-//        TextView textReceiverName = findViewById(R.id.text_receiver_name);
-//        TextView textTransactionRefId = findViewById(R.id.text_transaction_ref_id);
-//        TextView textTransactionNote = findViewById(R.id.text_transaction_note);
-//        TextView textAmount = findViewById(R.id.text_amount);
-//        TextView textCurrency = findViewById(R.id.text_currency);
-//        TextView textUrl = findViewById(R.id.text_url);
-//        TextView textMerchantId = findViewById(R.id.text_merchant_id);
 
-        // Set the text in the TextViews
-//        if (app != null) {
-//            textApp.setText("App: " + app);
-//        } else {
-//            textApp.setText("App: com.google.android.apps.nbu.paisa.user");
-//        }
-//
-//
-//        if (receiverUpiId != null) {
-//            textReceiverUpiId.setText("Receiver UPI ID: " + receiverUpiId);
-//        } else {
-//            textReceiverUpiId.setText("Receiver UPI ID: 8860733786@ybl");
-//        }
-//
-//        if (receiverName != null) {
-//            textReceiverName.setText("Receiver Name: " + receiverName);
-//        } else {
-//            textReceiverName.setText("Receiver Name: Ravi Kant");
-//        }
-//
-//        if (transactionRefId != null) {
-//            textTransactionRefId.setText("Transaction Ref ID: " + transactionRefId);
-//        } else {
-//            textTransactionRefId.setText("Transaction Ref ID: Not Provided");
-//        }
-//
-//        if (transactionNote != null) {
-//            textTransactionNote.setText("Transaction Note: " + transactionNote);
-//        } else {
-//            textTransactionNote.setText("Transaction Note: No Note");
-//        }
-//
-//        if (amount != null) {
-//            textAmount.setText("Amount: " + amount);
-//        } else {
-//            textAmount.setText("Amount: 10.00");
-//        }
-//
-//        if (currency != null) {
-//            textCurrency.setText("Currency: " + currency);
-//        } else {
-//            textCurrency.setText("Currency: INR");
-//        }
-//
-//        if (url != null) {
-//            textUrl.setText("URL: " + url);
-//        } else {
-//            textUrl.setText("URL: Not Available");
-//        }
-//
-//        if (merchantId != null) {
-//            textMerchantId.setText("Merchant ID: " + merchantId);
-//        } else {
-//            textMerchantId.setText("Merchant ID: Not Assigned");
-//        }
+        TextView expandableTitle = findViewById(R.id.expandable_title);
+//        LinearLayout expandableContent = findViewById(R.id.expandable_content);
+        GridLayout  expandableContent = findViewById(R.id.expandable_content);
+
+//        expandableTitle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (expandableContent.getVisibility() == View.GONE) {
+//                    // Expand with animation
+//                    expandableContent.setVisibility(View.VISIBLE);
+//                    ObjectAnimator.ofFloat(expandableContent, "translationY", 0f, expandableContent.getHeight()).start();
+//                } else {
+//                    // Collapse with animation
+//                    ObjectAnimator.ofFloat(expandableContent, "translationY", expandableContent.getHeight(), 0f).start();
+//                    expandableContent.setVisibility(View.GONE);
+//                }
+//            }
+//        });
+
+        expandableTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (expandableContent.getVisibility() == View.GONE) {
+                    // Expand with animation
+                    expandableContent.setVisibility(View.VISIBLE); // Make the content visible first
+                    ObjectAnimator animator = ObjectAnimator.ofFloat(expandableContent, "translationY", expandableContent.getHeight(), 0f);
+                    animator.setDuration(300); // Set the animation duration
+                    animator.start();
+                } else {
+                    // Collapse with animation
+                    ObjectAnimator animator = ObjectAnimator.ofFloat(expandableContent, "translationY", 0f, expandableContent.getHeight());
+                    animator.setDuration(100); // Set the animation duration
+                    animator.start();
+
+                    // Set visibility to GONE after the animation completes
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            // Hide the content only after the collapse animation finishes
+                            expandableContent.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            }
+        });
 
 
 
-        TextView transactionStatus = findViewById(R.id.transaction_status);
+
+
+
+
 //        Button closeButton = findViewById(R.id.close_button);
-        Button openPhonepeBtn = findViewById(R.id.open_phonepe);
-        Button openGpayBtn = findViewById(R.id.open_gpay);
-        Button openPaytmBtn = findViewById(R.id.open_paytm);
+//        Button openPhonepeBtn = findViewById(R.id.open_phonepe);
+//        Button openGpayBtn = findViewById(R.id.open_gpay);
+//        Button openPaytmBtn = findViewById(R.id.open_paytm);
 
 
         // Initialize the scale animation
         scaleAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_button);
 
-        // Set a message (you can pass data through Intent extras)
-        transactionStatus.setText("Transaction Successful");
+
+        setupAllUpiButtons(buttons, upiPackages, receiverUpiId, receiverName, transactionRefId, transactionNote, amount, currency, url, merchantId);
+
+
 
         // Close the activity when the button is clicked
 //        closeButton.setOnClickListener(v -> finish());
 
         // Set OnClickListeners for UPI app buttons
-        setUpUpiButton(openPhonepeBtn, app, receiverUpiId, receiverName, transactionRefId, transactionNote, amount, currency, url, merchantId);
-        setUpUpiButton(openGpayBtn, app, receiverUpiId, receiverName, transactionRefId, transactionNote, amount, currency, url, merchantId);
-        setUpUpiButton(openPaytmBtn, app, receiverUpiId, receiverName, transactionRefId, transactionNote, amount, currency, url, merchantId);
+        //        setUpUpiButton(openPhonepeBtn, "com.phonepe.app", receiverUpiId, receiverName, transactionRefId, transactionNote, amount, currency, url, merchantId);
+        //        setUpUpiButton(openGpayBtn, "com.google.android.apps.nbu.paisa.user", receiverUpiId, receiverName, transactionRefId, transactionNote, amount, currency, url, merchantId);
+        //        setUpUpiButton(openPaytmBtn, "net.one97.paytm", receiverUpiId, receiverName, transactionRefId, transactionNote, amount, currency, url, merchantId);
     }
+
+
+    private void setupAllUpiButtons(
+            List<Button> buttons, // List of buttons for UPI apps
+            List<String> packageIds, // List of package names
+            String receiverUpiId,
+            String receiverName,
+            String transactionRefId,
+            String transactionNote,
+            String amount,
+            String currency,
+            String url,
+            String merchantId
+    ) {
+        for (int i = 0; i < buttons.size(); i++) {
+            if (i < packageIds.size()) {
+                setUpUpiButton(
+                        buttons.get(i),
+                        packageIds.get(i),
+                        receiverUpiId,
+                        receiverName,
+                        transactionRefId,
+                        transactionNote,
+                        amount,
+                        currency,
+                        url,
+                        merchantId
+                );
+            }
+        }
+    }
+
+
+
+
 
     // Helper method to set up the button listeners and call the appropriate UPI app
     private void setUpUpiButton(Button button, String packageId, String receiverUpiId,
@@ -146,6 +236,7 @@ public class SwiftUpiActivity extends Activity {
                                 String url,
                                 String merchantId) {
         button.setOnClickListener(v -> {
+            Log.d("SwiftUpiActivity", "App Name: " + packageId);
             // Apply scale animation to the clicked button
             button.startAnimation(scaleAnimation);
 

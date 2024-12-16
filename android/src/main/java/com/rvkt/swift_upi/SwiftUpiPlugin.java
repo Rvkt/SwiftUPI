@@ -188,7 +188,7 @@ public class SwiftUpiPlugin implements FlutterPlugin, MethodCallHandler, Activit
     Intent intent = new Intent(activity, SwiftUpiActivity.class);
 
     // Pass the extracted parameters to the intent
-    intent.putExtra("app", app);
+//    intent.putExtra("app", app);
     intent.putExtra("receiverUpiId", receiverUpiId);
     intent.putExtra("receiverName", receiverName);
     intent.putExtra("transactionRefId", transactionRefId);

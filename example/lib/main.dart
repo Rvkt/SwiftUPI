@@ -166,7 +166,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   // TODO: Show the UI
-  void displayCustomUi({required String recUpiId, required String recName, required String txnRefId, required String txnNote, required String amt, required String app}) async {
+  void displayCustomUi({required String recUpiId, required String recName, required String txnRefId, required String txnNote, required String amt}) async {
     try {
       await _swiftUpiPlugin.showCustomUi(
         merchantId: '123',
@@ -183,7 +183,7 @@ class _MyAppState extends State<MyApp> {
         // Replace with a transaction note (optional)
         amount: amt,
         // Amount in INR (required)
-        app: app,
+        // app: app,
       );
       print("Custom UI displayed successfully.");
     } catch (e) {
@@ -218,7 +218,7 @@ class _MyAppState extends State<MyApp> {
                     txnRefId: 'TXN123QWER',
                     txnNote: 'Check',
                     amt: '1.0',
-                    app: 'upiApps[index][packageName]',
+                    // app: 'upiApps[index][packageName]',
                   );
                 },
                 child: const Text('Show UI')),
